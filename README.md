@@ -9,7 +9,7 @@ Yelp. See [here](https://www.yelp.com/dataset) for more information.
 
 Due to the large size of the datasets, they exceed GitHub's file size limit, so they will first need to be downloaded
 from [here](https://www.yelp.com/dataset/download). Once downloaded and extracted, move them to the repository data
-directory and update main.go with the names (i.e. indexes), filenames, and primary keys of the datasets to upload.
+directory and update main.go with the indexes, filenames, and primary keys of the datasets to upload.
 
 To run the application, first ensure Meilisearch is running, using whatever is preferred. You can execute
 a `docker compose up -d` to run a Meilisearch server locally running in detached mode.

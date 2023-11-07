@@ -10,14 +10,14 @@ import (
 )
 
 type Input struct {
-	Name       string
+	Index      string
 	Filename   string
 	PrimaryKey string
 	BatchSize  int
 }
 
 type Result struct {
-	Name       string
+	Index      string
 	PrimaryKey string
 	BatchSize  int
 	JSON       []map[string]interface{}
@@ -51,7 +51,7 @@ func decodeFile(input Input, channel chan Result) {
 	}
 
 	channel <- Result{
-		Name:       input.Name,
+		Index:      input.Index,
 		PrimaryKey: input.PrimaryKey,
 		BatchSize:  input.BatchSize,
 		JSON:       docs,
@@ -68,6 +68,9 @@ func main() {
 
 	inputs := []Input{
 		{"businesses", "./data/yelp_academic_dataset_business.json", "business_id", 50000},
+		{"checkins", "./data/yelp_academic_dataset_checkin.json", "business_id", 10000},
+		{"reviews", "./data/yelp_academic_dataset_review.json", "review_id", 10000},
+		{"users", "./data/yelp_academic_dataset_user.json", "user_id", 10000},
 	}
 
 	for _, input := range inputs {
@@ -76,12 +79,12 @@ func main() {
 
 	for i := 0; i < len(inputs); i++ {
 		result := <-results
-		log.Printf("Adding %d %s documents in batches of %d", len(result.JSON), result.Name, result.BatchSize)
-		if responses, err := client.Index(result.Name).AddDocumentsInBatches(result.JSON, result.BatchSize, result.PrimaryKey); err != nil {
+		log.Printf("Adding %d %s documents in batches of %d", len(result.JSON), result.Index, result.BatchSize)
+		if responses, err := client.Index(result.Index).AddDocumentsInBatches(result.JSON, result.BatchSize, result.PrimaryKey); err != nil {
 			log.Fatalf("Failed to unmarshal message value into json: %s", err)
 		} else {
 			for i, resp := range responses {
-				log.Printf("Waiting for %s task %d to be completed...", result.Name, i)
+				log.Printf("Waiting for %s task %d to be completed...", result.Index, i)
 				if t, err := client.WaitForTask(resp.TaskUID); err != nil {
 					if err.Error() == "context deadline exceeded" {
 						continue
