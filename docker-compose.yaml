@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  meilisearch:
+    image: "getmeili/meilisearch:v1.4"
+    container_name: meilisearch
+    environment:
+      - MEILI_ENV=development
+    ports:
+      - '7700:7700'
+    volumes: # Define any required volumes / bind mounts
+      - ./meili_data:/meili_data
+
